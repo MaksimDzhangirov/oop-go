@@ -367,7 +367,53 @@ Hi from walk function
 структуру, как показано ниже.
 
 ```go
-
+package main
+import "fmt"
+type iAnimal interface {
+    breathe()
+}
+type animal struct {
+}
+func (a *animal) breathe() {
+    fmt.Println("Animal breate")
+}
+type iAquatic interface {
+    iAnimal
+    swim()
+}
+type aquatic struct {
+    animal
+}
+func (a *aquatic) swim() {
+    fmt.Println("Aquatic swim")
+}
+type iNonAquatic interface {
+    iAnimal
+    walk()
+}
+type nonAquatic struct {
+    animal
+}
+func (a *nonAquatic) walk() {
+    fmt.Println("Non-Aquatic walk")
+}
+type shark struct {
+    aquatic
+}
+type lion struct {
+    nonAquatic
+}
+func main() {
+    shark := &shark{}
+    checkAquatic(shark)
+    checkAnimal(shark)
+    lion := &lion{}
+    checkNonAquatic(lion)
+    checkAnimal(lion)
+}
+func checkAquatic(a iAquatic) {}
+func checkNonAquatic(a iNonAquatic) {}
+func checkAnimal(a iAnimal) {}
 ```
 
 Посмотрите как в вышеприведенной программе мы смогли создать иерархию. Это 
@@ -382,6 +428,11 @@ Hi from walk function
 
 ```shell
 go run inheritance/example7/program7.go
+iAnimal
+--iAquatic
+----shark
+--iNonAquatic
+----lion
 ```
 
 ## Заключение
